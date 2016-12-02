@@ -33,14 +33,15 @@ public abstract class ObjectEventListener<T> implements EventListener {
         for (BinlogEvent binlogEvent : binlogEvents)
             if (StringUtils.equals(db, binlogEvent.getDb()) && StringUtils.equals(binlogEvent.getTable(), table)) {
                 ObjectEvent<T> objectEvent = new ObjectEvent().event(binlogEvent);
-                if (CollectionUtils.isEmpty(binlogEvent.getRows())) {
+                if (CollectionUtils.isNotEmpty(binlogEvent.getRows())) {
                     objectEvent.object(binlogEvent.getRows().stream()
                             .map(row -> map2Pojo.parse(row.getColumns().stream().collect(Collectors.toMap(t -> t.getColumn(), t -> t.getValue()))))
                             .collect(Collectors.toList()));
                 }
                 events.add(objectEvent);
             }
-        handleEvent(new ObjectEventContext(events));
+        if (CollectionUtils.isNotEmpty(events))
+            handleEvent(new ObjectEventContext(events));
     }
 
     public abstract void handleEvent(ObjectEventContext<T> re);

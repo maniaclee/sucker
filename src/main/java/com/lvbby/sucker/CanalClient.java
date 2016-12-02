@@ -62,6 +62,7 @@ public class CanalClient implements Runnable {
 
     public void run() {
         try {
+            System.out.println("canal server running ....");
             isRunning = true;
             while (isRunning) {
                 Message message = connector.getWithoutAck(batchSize); // 获取指定数量的数据
