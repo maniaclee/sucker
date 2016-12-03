@@ -21,7 +21,10 @@ public class Map2Pojo<T> {
     private void init() {
         fieldMap = Arrays.asList(t.getDeclaredFields()).stream()
                 .filter(e -> filterField(e))
-                .collect(Collectors.toMap(e -> format(e.getName()), e -> e));
+                .collect(Collectors.toMap(e -> {
+                    e.setAccessible(true);
+                    return format(e.getName());
+                }, e -> e));
     }
 
     private boolean filterField(Field e) {
@@ -45,10 +48,11 @@ public class Map2Pojo<T> {
             if (field != null)
                 try {
                     field.set(finalRe, SqlValueParser.parse(v, field.getType()));
-                } catch (IllegalAccessException e) {
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
         });
-        return null;
+        return finalRe;
     }
 
 
