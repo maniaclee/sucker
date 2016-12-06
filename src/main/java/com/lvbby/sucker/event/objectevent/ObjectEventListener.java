@@ -35,7 +35,7 @@ public abstract class ObjectEventListener<T> implements EventListener {
                 if (CollectionUtils.isNotEmpty(binlogEvent.getRows())) {
                     ObjectEvent<T> objectEvent = new ObjectEvent().event(binlogEvent);
                     objectEvent.object(binlogEvent.getRows().stream()
-                            .map(row -> map2Pojo.parse(row.getColumns().stream().collect(Collectors.toMap(t -> t.getColumn(), t -> t.getValue()))))
+                            .map(row -> map2Pojo.fromStringMap(row.getColumns().stream().collect(Collectors.toMap(t -> t.getColumn(), t -> t.getValue()))))
                             .collect(Collectors.toList()));
                     events.add(objectEvent);
                 }

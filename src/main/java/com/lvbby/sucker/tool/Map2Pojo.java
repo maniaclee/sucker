@@ -1,9 +1,12 @@
 package com.lvbby.sucker.tool;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +38,16 @@ public class Map2Pojo<T> {
         return s.replaceAll("[^1-9a-zA-Z]", "").toLowerCase();
     }
 
-    public T parse(Map<String, String> map) {
+    public T fromObjectMap(Map<String, Object> map) {
+        return _parseObject(map, e -> e.getValue());
+    }
+
+    public T fromStringMap(Map<String, String> map) {
+        return _parseObject(map, e -> SqlValueParser.parse((String) e.getKey(), e.getValue()));
+    }
+
+
+    public T _parseObject(Map<String, ?> map, Function<Pair<Object, Class>, Object> function) {
         T re = null;
         try {
             re = this.t.newInstance();
@@ -47,7 +59,7 @@ public class Map2Pojo<T> {
             Field field = fieldMap.get(format(k));
             if (field != null)
                 try {
-                    field.set(finalRe, SqlValueParser.parse(v, field.getType()));
+                    field.set(finalRe, function.apply(Pair.of(v, field.getType())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
