@@ -43,7 +43,7 @@ public class Map2Pojo<T> {
     }
 
     public T fromStringMap(Map<String, String> map) {
-        return _parseObject(map, e -> SqlValueParser.parse((String) e.getKey(), e.getValue()));
+        return _parseObject(map, e -> SqlValueParser.parse((String) e.getKey(), (Class<T>)e.getValue()));
     }
 
 
