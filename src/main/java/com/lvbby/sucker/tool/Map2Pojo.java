@@ -39,11 +39,11 @@ public class Map2Pojo<T> {
     }
 
     public T fromObjectMap(Map<String, Object> map) {
-        return _parseObject(map, e -> e.getValue());
+        return _parseObject(map, e -> SqlValueParser.parseFromObject(e.getKey(), (Class<?>) e.getValue()));//let go of the generic type
     }
 
     public T fromStringMap(Map<String, String> map) {
-        return _parseObject(map, e -> SqlValueParser.parse((String) e.getKey(), (Class<T>)e.getValue()));
+        return _parseObject(map, e -> SqlValueParser.parse((String) e.getKey(), (Class<?>) e.getValue()));
     }
 
 

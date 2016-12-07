@@ -16,7 +16,25 @@ public class SqlValueParser {
         return (T) _parse(s, c);
     }
 
-    public static <T> Object _parse(String s, Class<T> c) {
+
+    public static <T> T parseFromObject(Object s, Class<T> c) {
+        return (T) _parseFromObject(s, c);
+    }
+
+    private static <T> Object _parseFromObject(Object s, Class<T> c) {
+        if (s == null)
+            return s;
+        Class<?> clz = s.getClass();
+        if (c.equals(Date.class)) {
+            if (Long.class.equals(clz) || long.class.equals(clz))
+                return new Date((Long) s);
+            if (Integer.class.equals(clz) || int.class.equals(clz))
+                return new Date(1000 * (int) s);
+        }
+        return s;
+    }
+
+    private static <T> Object _parse(String s, Class<T> c) {
         if (Number.class.isAssignableFrom(c) && StringUtils.isBlank(s))
             return null;
         if (c.isPrimitive() && StringUtils.isBlank(s))
@@ -46,12 +64,5 @@ public class SqlValueParser {
             }
         throw new IllegalArgumentException("unknown type" + c.getName());
     }
-
-    public static void main(String[] args) throws ParseException {
-        System.out.println(parse("", Integer.class));
-        System.out.println(parse("", int.class));
-        System.out.println(new SimpleDateFormat("yyyy-MM-dd hh:mm:ss").parse("2016-11-28 22:29:00"));
-    }
-
 
 }
