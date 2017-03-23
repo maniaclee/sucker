@@ -33,7 +33,9 @@
             </exclusions>
         </dependency>
     </dependencies>
-
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>binlog listener</description>
+    <url>https://github.com/maniaclee/sucker</url>
     <build>
         <plugins>
             <plugin>
