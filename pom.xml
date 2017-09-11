@@ -36,6 +36,11 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.31</version>
+        </dependency>
     </dependencies>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>binlog listener</description>
